@@ -1,6 +1,7 @@
 # Mask R-CNN for Object Detection and Segmentation
 
-This is an implementation of [Mask R-CNN](https://arxiv.org/abs/1703.06870) on Python 3, Keras, and TensorFlow. The model generates bounding boxes and segmentation masks for each instance of an object in the image. It's based on Feature Pyramid Network (FPN) and a ResNet101 backbone.
+This is an implementation of [Mask R-CNN](https://arxiv.org/abs/1703.06870) on Python 3, Keras, and TensorFlow. The model generates bounding boxes and segmentation masks for each instance of an object in the image. It's based on Feature Pyramid Network (FPN) and a ResNet101 backbone. In addition the implementation of [Omni-Supervised Learning] https://arxiv.org/abs/1712.04440
+will be implemeted. Steps will be updated in the projectboard.
 
 ![Instance Segmentation Sample](assets/street.png)
 
@@ -23,7 +24,7 @@ It includes code to run object detection and instance segmentation on arbitrary 
 
 * [train_shapes.ipynb](samples/shapes/train_shapes.ipynb) shows how to train Mask R-CNN on your own dataset. This notebook introduces a toy dataset (Shapes) to demonstrate training on a new dataset.
 
-* ([model.py](mrcnn/model.py), [utils.py](mrcnn/utils.py), [config.py](mrcnn/config.py)): These files contain the main Mask RCNN implementation. 
+* ([model.py](mrcnn/model.py), [utils.py](mrcnn/utils.py), [config.py](mrcnn/config.py)): These files contain the main Mask RCNN implementation.
 
 
 * [inspect_data.ipynb](samples/coco/inspect_data.ipynb). This notebook visualizes the different pre-processing steps
@@ -36,7 +37,7 @@ This notebooks inspects the weights of a trained model and looks for anomalies a
 
 
 # Step by Step Detection
-To help with debugging and understanding the model, there are 3 notebooks 
+To help with debugging and understanding the model, there are 3 notebooks
 ([inspect_data.ipynb](samples/coco/inspect_data.ipynb), [inspect_model.ipynb](samples/coco/inspect_model.ipynb),
 [inspect_weights.ipynb](samples/coco/inspect_weights.ipynb)) that provide a lot of visualizations and allow running the model step by step to inspect the output at each point. Here are a few examples:
 
@@ -116,11 +117,11 @@ In summary, to train the model on your own dataset you'll need to extend two cla
 This class contains the default configuration. Subclass it and modify the attributes you need to change.
 
 ```Dataset```
-This class provides a consistent way to work with any dataset. 
-It allows you to use new datasets for training without having to change 
+This class provides a consistent way to work with any dataset.
+It allows you to use new datasets for training without having to change
 the code of the model. It also supports loading multiple datasets at the
-same time, which is useful if the objects you want to detect are not 
-all available in one dataset. 
+same time, which is useful if the objects you want to detect are not
+all available in one dataset.
 
 See examples in `samples/shapes/train_shapes.ipynb`, `samples/coco/coco.py`, `samples/balloon/balloon.py`, and `samples/nucleus/nucleus.py`.
 
@@ -131,12 +132,12 @@ This implementation follows the Mask RCNN paper for the most part, but there are
 * **Bounding Boxes**: Some datasets provide bounding boxes and some provide masks only. To support training on multiple datasets we opted to ignore the bounding boxes that come with the dataset and generate them on the fly instead. We pick the smallest box that encapsulates all the pixels of the mask as the bounding box. This simplifies the implementation and also makes it easy to apply image augmentations that would otherwise be harder to apply to bounding boxes, such as image rotation.
 
     To validate this approach, we compared our computed bounding boxes to those provided by the COCO dataset.
-We found that ~2% of bounding boxes differed by 1px or more, ~0.05% differed by 5px or more, 
+We found that ~2% of bounding boxes differed by 1px or more, ~0.05% differed by 5px or more,
 and only 0.01% differed by 10px or more.
 
 * **Learning Rate:** The paper uses a learning rate of 0.02, but we found that to be
 too high, and often causes the weights to explode, especially when using a small batch
-size. It might be related to differences between how Caffe and TensorFlow compute 
+size. It might be related to differences between how Caffe and TensorFlow compute
 gradients (sum vs mean across batches and GPUs). Or, maybe the official model uses gradient
 clipping to avoid this issue. We do use gradient clipping, but don't set it too aggressively.
 We found that smaller learning rates converge faster anyway so we go with that.
@@ -187,7 +188,7 @@ If you use Docker, the code has been verified to work on
 3. Run setup from the repository root directory
     ```bash
     python3 setup.py install
-    ``` 
+    ```
 3. Download pre-trained COCO weights (mask_rcnn_coco.h5) from the [releases page](https://github.com/matterport/Mask_RCNN/releases).
 4. (Optional) To train or test on MS COCO install `pycocotools` from one of these repos. They are forks of the original pycocotools with fixes for Python3 and Windows (the official repo doesn't seem to be active anymore).
 
